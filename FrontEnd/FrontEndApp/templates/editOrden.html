@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Orden</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <style>
+        #editarForm {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            margin-top: 50px; /* Ajusta el margen superior para centrar el formulario */
+            box-sizing: border-box; /* Asegura que el padding se tenga en cuenta en el ancho total */
+            overflow: hidden; /* Oculta el desbordamiento para eliminar la línea en blanco a la derecha */
+        }
+        
+        #editarForm h2 {
+            text-align: center;
+            margin-bottom: 20px; /* Aumenta el espacio entre el título y los campos */
+        }
+        
+        #editarForm .input-field {
+            margin-bottom: 15px; /* Espacio entre los campos */
+            text-align: center; /* Centra los inputs */
+        }
+        
+        #editarForm span {
+            display: inline-block;
+            width: 120px; /* Ancho fijo para las etiquetas */
+            font-weight: bold;
+        }
+        
+        #editarForm input {
+            width: calc(100% - 120px); /* Calcula el ancho del input restando el ancho de la etiqueta */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Estilo para campos bloqueados */
+        #editarForm input:disabled {
+            background-color: #ddd; /* Color de fondo más oscuro para campos bloqueados */
+        }
+        
+        #editarForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #121213;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px; /* Ajusta el espacio entre el último campo y el botón */
+        }
+        
+    </style>
+</head>
+<body>
+    <main>
+        <div id="editarForm">
+            <h2>Editar Orden</h2>
+            <form action="{% url 'editarOrden' id=id %}" method="post">
+                {% csrf_token %}
+                {% if orden %}
+                <input type="hidden" id="orden" name="orden" value="{{ orden.0.orden }}">
+                    <div class="input-field">
+                        <span>Referencia:</span>
+                        <input type="text" id="Referencia" name="Referencia" value="{{ orden.0.Referencia }}" disabled />
+                    </div>
+                    <div class="input-field">
+                        <span>Color:</span>
+                        <input type="text" id="color" name="color" value="{{ orden.0.color }}" disabled />
+                    </div>
+                    <div class="input-field">
+                        <span>Talla:</span>
+                        <input type="text" id="talla" name="talla" value="{{ orden.0.talla }}" disabled />
+                    </div>
+                    <div class="input-field">
+                        <span>Modulo:</span>
+                        <input type="text" id="modulo" name="modulo" value="{{ orden.0.modulo }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>SKU:</span>
+                        <input type="text" id="SKU" name="SKU" value="{{ orden.0.SKU }}" disabled />
+                    </div>
+                    <div class="input-field">
+                        <span>Unidades:</span>
+                        <input type="number" id="unidades" name="unidades" value="{{ orden.0.unidades }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Unidades Leidas:</span>
+                        <input type="number" id="unidadesLeidas" name="unidadesLeidas" value="{{ orden.0.unidadesLeidas }}" disabled />
+                    </div>
+                    <!-- Agrega más campos según sea necesario -->
+                    <button type="submit">Guardar Cambios</button>
+                    {% else %}
+                    <script>
+                        alert("No se encontró ninguna orden para editar.");
+                        window.history.back(); // Regresar a la página anterior
+                    </script>
+                    {% endif %}
+            </form>
+        </div>
+    </main>
+
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const unidadesInput = document.getElementById('unidades');
+            const unidadesLeidasInput = document.getElementById('unidadesLeidas');
+
+            // Validar que las unidades no sean menores que las unidades leídas
+            unidadesInput.addEventListener('blur', function() {
+                const unidades = parseInt(unidadesInput.value);
+                const unidadesLeidas = parseInt(unidadesLeidasInput.value);
+                if (unidades < unidadesLeidas) {
+                    alert('Las unidades no pueden ser menores que las unidades leídas.');
+                    unidadesInput.value = unidadesLeidas; // Restablecer las unidades a las leídas
+                }
+            });
+        });
+    </script>
+</body>
+</html>

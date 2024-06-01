@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RH</title>
+
+    <link rel="stylesheet" href="{% static 'assets/css/estilos.css' %}" />
+    <script
+      src="https://kit.fontawesome.com/41bcea2ae3.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body id="body">
+    <header>
+      <div class="icon__menu">
+        <i class="fas fa-bars" id="btn_open"></i>
+      </div>
+    </header>
+
+    <div class="menu__side" id="menu_side">
+      <div class="name__page">
+        <i class="fa-solid fa-user"></i>
+        <h4>Recursos Humanos</h4>
+      </div>
+
+      <div class="options__menu">
+        <a href="#" class="selected" id="registrarOption">
+          <div class="option">
+            <i class="fa-regular fa-floppy-disk"></i>
+            <h4>Registrar Operario</h4>
+          </div>
+        </a>
+        <a href="#" class="selected" id="editarOption">
+          <div class="option">
+            <i class="fas fa-pencil-alt"></i>
+            <h4>Editar Operario</h4>
+          </div>
+        </a>
+        <a href="{% url 'buscarTodosOperario' id=id %}">
+          <div class="option">
+            <i class="fas fa-trash-alt"></i>
+            <h4>eliminar</h4>
+          </div>
+        </a>
+        <a href="{% url 'cerrarSesion' id %}">
+          <div class="option">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <h4>Salir</h4>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <main>
+      <div id="registroForm" style="display: none">
+        <h2>Registrar Operario</h2>
+        <form action="{% url 'registraOperario' id=id %}" method="get">
+          <div class="input-field">
+            <span>Nombre:</span>
+            <input type="text" id="nombre" name="nombre" required />
+          </div>
+          <div class="input-field">
+            <span>Cédula:</span>
+            <input type="text" id="cedula" name="cedula" required />
+          </div>
+          <div class="input-field">
+            <span>Dirección</span>
+            <input type="text" id="direccion" name="direccion" required />
+          </div>
+          <div class="input-field">
+            <span>Teléfono:</span>
+            <input type="text" id="telefono" name="telefono" required />
+          </div>
+          <div class="input-field">
+            <span>Fecha de Nacimiento:</span>
+            <input type="date" id="fechaN" name="fechaN" required />
+          </div>
+          <div class="input-field">
+            <span>Correo:</span>
+            <input type="email" id="correoE" name="correoE" required />
+          </div>
+          <div class="input-field">
+            <span>Modulo:</span>
+            <select id="modulo" name="modulo" required>
+              <option value="" selected disabled>Selecciona un modulo</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+          </select>
+        </div>
+          <br />
+          <button type="submit">Registrar</button>
+        </form>
+      </div>
+
+      <div id="editarForm" style="display: none">
+        <h2>Editar Operario</h2>
+        <form action="{% url 'buscarOperario' id=id %}" method="get">
+          <div class="input-field">
+            <span>Cédula:</span>
+            <input type="text" id="cedulaEditar" name="cedulaEditar" required />
+          </div>
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+    </main>
+    {% if registro_exitoso %}
+    <script>
+      alert("Operario registrado correctamente.");
+    </script>
+    {% endif %}
+    {% if eliminacion_exitoso %}
+    <script>
+      alert("Operario eliminado correctamente.");
+    </script>
+    {% endif %}    
+    {% if edicion_exitosa %}
+    <script>
+      alert("Operario editado correctamente.");
+    </script>
+    {% endif %}     
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const registroForm = document.getElementById("registroForm");
+        const editarForm = document.getElementById("editarForm");
+        const registrarOption = document.getElementById("registrarOption");
+        const editarOption = document.getElementById("editarOption");
+        const side_menu = document.getElementById("menu_side");
+        const btn_open = document.getElementById("btn_open");
+        const body = document.getElementById("body");
+
+        registrarOption.addEventListener("click", function (e) {
+          e.preventDefault();
+          toggleFormulario(registroForm);
+        });
+
+        editarOption.addEventListener("click", function (e) {
+          e.preventDefault();
+          toggleFormulario(editarForm);
+        });
+
+        btn_open.addEventListener("click", function () {
+          body.classList.toggle("body_move");
+          side_menu.classList.toggle("menu__side_move");
+          cerrarFormulario();
+        });
+
+        if (window.innerWidth < 760) {
+          body.classList.add("body_move");
+          side_menu.classList.add("menu__side_move");
+        }
+
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > 760) {
+            body.classList.remove("body_move");
+            side_menu.classList.remove("menu__side_move");
+          }
+          if (window.innerWidth < 760) {
+            body.classList.add("body_move");
+            side_menu.classList.add("menu__side_move");
+          }
+        });
+
+        function toggleFormulario(formulario) {
+          if (formulario.style.display === "block") {
+            formulario.style.display = "none";
+          } else {
+            cerrarFormulario();
+            formulario.style.display = "block";
+          }
+        }
+
+        function cerrarFormulario() {
+          registroForm.style.display = "none";
+          editarForm.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

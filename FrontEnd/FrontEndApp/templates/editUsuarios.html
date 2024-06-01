@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+
+</head>
+<body>
+    <main>
+        <div id="editarForm">
+            <h2>Editar Usuario</h2>
+            <form action="{% url 'editarUsuario' id=id %}" method="post">
+                {% csrf_token %}
+                {% if persona %}
+                <input type="hidden" id="cedula" name="cedula" value="{{ persona.0.cedula }}">
+                    <div class="input-field">
+                        <span>Nombre:</span>
+                        <input type="text" id="nombre" name="nombre" value="{{ persona.0.nombre }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Rol:</span>
+                        <select id="rol" name="rol" required>
+                            <option value="RH" {% if persona.0.rol == "RH" %} selected {% endif %}>Recursos Humanos</option>
+                            <option value="ADMIN" {% if persona.0.rol == "ADMIN" %} selected {% endif %}>Administrador</option>
+                            <option value="PRODUCCION" {% if persona.0.rol == "PRODUCCION" %} selected {% endif %}>Producción</option>
+                            <option value="INCENTIVOS" {% if persona.0.rol == "INCENTIVOS" %} selected {% endif %}>Incentivos</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <span>Usuario:</span>
+                        <input type="text" id="usuario" name="usuario" value="{{ persona.0.usuario }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Password:</span>
+                        <input type="text" id="password" name="password" value="{{ persona.0.password }}" required />
+                    </div>
+                    <button type="submit">Guardar Cambios</button>
+                    {% else %}
+                    <script>
+                        alert("No se encontró ningún operario para editar.");
+                        window.history.back(); // Regresar a la página anterior
+                    </script>
+                    {% endif %}
+            </form>
+        </div>
+    </main>
+    
+    
+
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    
+    <!-- Tu script JS para manejar la solicitud de edición aquí -->
+</body>
+</html>

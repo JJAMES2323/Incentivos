@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESCANEO</title>
+    <link rel="stylesheet" href="{% static 'assets/css/estilos.css' %}" />
+    <script
+      src="https://kit.fontawesome.com/41bcea2ae3.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* Estilos adicionales específicos para la página de escaneo */
+      /* Ajustes de diseño */
+      body {
+        margin: 0;
+      }
+      .scan__container {
+        max-width: 90%;
+        margin: 50px auto;
+        background-color: #f0f0f0;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        padding: 20px;
+        text-align: center; /* Ahora el contenido dentro del contenedor estará centrado */
+      }
+
+      .scan__info {
+        margin-bottom: 20px;
+        font-size: 32px;
+        text-align: center; /* Centramos el texto dentro del contenedor */
+      }
+
+      .scan__input-unit-container {
+        max-width: 1000px; /* Aumentamos el ancho máximo del contenedor */
+        margin: 0 auto; /* Centramos el contenedor en la página */
+        display: flex; /* Utilizamos flexbox para alinear los elementos */
+        flex-direction: column; /* Apilamos los elementos verticalmente */
+        justify-content: center; /* Centramos verticalmente el contenido */
+        align-items: center; /* Centramos horizontalmente el contenido */
+      }
+
+      .scan__input-container,
+      .scan__unit-container,
+      .scan__button-container {
+        width: 100%; /* Ancho completo */
+        margin-bottom: 20px; /* Espaciado inferior entre contenedores */
+      }
+
+      .scan__input,
+      .scan__button {
+        width: calc(100% - 20px); /* Tamaño de los elementos */
+        padding: 20px; /* Aumentamos el padding */
+        border-radius: 10px; /* Aumentamos el radio de borde */
+        border: 2px solid #ccc; /* Aumentamos el grosor del borde */
+      }
+
+      .scan__button {
+        background-color: #121213;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 20px; /* Aumentamos el tamaño de la letra */
+      }
+
+      .scan__unit {
+        margin-bottom: 0; /* Eliminamos el espaciado inferior */
+        font-size: 24px; /* Aumentamos el tamaño de la letra */
+        display: flex; /* Utilizamos flexbox para centrar vertical y horizontalmente el contenido */
+        justify-content: center; /* Centramos horizontalmente el contenido */
+        align-items: center; /* Centramos verticalmente el contenido */
+      }
+
+      .scan__unit span {
+        margin-left: 5px; /* Añadimos un pequeño espacio entre el ícono y el texto */
+      }
+
+      .scan__unit-container {
+        background-color: white; /* Fondo blanco para el contenedor de unidades */
+        padding: 20px; /* Espaciado interno */
+        border-radius: 10px; /* Borde redondeado */
+      }
+
+      .scan__input-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .scan__input-container input,
+      .scan__input-container button {
+        align-self: center; /* Centrar verticalmente solo el contenido del contenedor del SKU */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scan__container">
+      <div class="scan__info">
+        <strong>Orden:</strong> {{ orden_info.orden }} |
+        <strong>Referencia:</strong> {{ orden_info.referencia }} |
+        <strong>Color:</strong> {{ orden_info.color }} |
+        <strong>Talla:</strong> {{ orden_info.talla }} |
+        <strong>SKU:</strong> {{ orden_info.sku }} | 
+        <strong>Modulo:</strong> {{orden_info.modulo }}
+      </div>
+    </div>
+    <div class="scan__input-unit-container">
+      <div class="scan__input-container">
+        <input
+          id="skuInput"
+          type="text"
+          class="scan__input"
+          placeholder="Ingrese SKU"
+        /><br>
+        <button id="checkButton" class="scan__button">Comprobar</button>
+      </div>
+      <div class="scan__unit-container" id="unitContainer">
+        <div class="scan__unit">Unidades Orden: {{ orden_info.unidades }}</div>
+        <div class="scan__unit">
+          Unidades Leídas:
+          <span id="leidas">{{ orden_info.unidadesLeidas }}</span>
+        </div>
+      </div>
+      <form id="inventarioForm" action="{% url 'registraInventario' id=id %}" method="post">
+        {% csrf_token %}
+        <div class="scan__button-container">
+            <button type="submit" id="finishButton" class="scan__button" disabled>
+                Terminar
+            </button><br>
+            <br><div id="currentUnits" class="scan__unit">Unidades: 0</div>
+            <input type="hidden" id="minutosProducidos" name="minutosProducidos" />
+            <input type="hidden" id="referencia" name="referencia" value="{{ orden_info.referencia }}" />
+            <input type="hidden" id="color" name="color" value="{{ orden_info.color }}" />
+            <input type="hidden" id="talla" name="talla" value="{{ orden_info.talla }}" />
+            <input type="hidden" id="sku" name="sku" value="{{ orden_info.sku }}" />
+            <input type="hidden" id="unidadesLeidasForm" name="unidadesLeidas" value="{{ orden_info.unidadesLeidas }}" />
+            <input type="hidden" id="unidadesActuales" name="unidadesActuales" value="0" /> <!-- Inicializado en 0 -->
+            <input type="hidden" id="sam" name="sam" value="{{ orden_info.sam }}" />
+            <input type="hidden" id="modulo" name="modulo" value="{{ orden_info.modulo }}" />
+            <input type="hidden" id="orden" name="orden" value="{{ orden_info.orden }}" />
+            <input type="hidden" id="token" name="token" value="{{ token }}" />
+        </div>
+    </form>
+    
+         
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const skuInput = document.getElementById('skuInput');
+            const checkButton = document.getElementById('checkButton');
+            const unidadesLeidas = document.getElementById('leidas');
+            const unidadesOrden = parseInt("{{ orden_info.unidades }}");
+            const sam = parseFloat("{{ orden_info.sam }}");
+            const unidadesLeidasForm = document.getElementById('unidadesLeidasForm');
+            const unidadesActualesInput = document.getElementById('unidadesActuales'); // Obtener el input de unidades actuales
+            const inventarioForm = document.getElementById('inventarioForm');
+            const finishButton = document.getElementById('finishButton');
+        
+            checkButton.addEventListener('click', function () {
+                const skuValue = skuInput.value.trim();
+                const skuOrden = "{{ orden_info.sku }}";
+        
+                if (skuValue === skuOrden) {
+                    let leidas = parseInt(unidadesLeidas.textContent);
+                    let unidadesActuales = parseInt(unidadesActualesInput.value); // Obtener el valor actual de unidades actuales
+                    if (leidas < unidadesOrden) {
+                        leidas++;
+                        unidadesActuales++; // Incrementar unidades actuales
+                        unidadesLeidas.textContent = leidas;
+                        unidadesLeidasForm.value = leidas; // Actualizar el campo de unidades leídas en el formulario
+                        unidadesActualesInput.value = unidadesActuales; // Actualizar el valor de unidades actuales en el input
+                        const minutosProducidos = unidadesActuales * sam;
+                        document.getElementById('minutosProducidos').value = minutosProducidos;
+                        document.getElementById('currentUnits').textContent = `Unidades: ${unidadesActuales}`; // Mostrar unidades actuales en la interfaz de usuario
+                        if (unidadesActuales > 0) {
+                            finishButton.removeAttribute('disabled'); // Habilitar el botón Terminar
+                        }
+                    } else {
+                        alert('Ya has escaneado todas las unidades de esta orden.');
+                    }
+                } else {
+                    alert('El SKU ingresado no coincide con el SKU de la orden.');
+                }
+                skuInput.value = '';
+            });
+        
+            skuInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    checkButton.click();
+                }
+            });
+        });
+        
+        
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Referencia</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <style>
+        #editarForm {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            margin-top: 50px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        #editarForm h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333; /* Color del título */
+        }
+        
+        #editarForm .input-field {
+            margin-bottom: 15px;
+        }
+        
+        #editarForm label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666; /* Color del texto de la etiqueta */
+        }
+        
+        #editarForm input,
+        #editarForm select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc; /* Color del borde */
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        
+        #editarForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #121213;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Estilo para la flecha del menú desplegable */
+        #editarForm select::after {
+            content: "\25BC";
+            position: absolute;
+            top: calc(50% - 8px);
+            right: 10px;
+            pointer-events: none;
+        }
+        
+        /* Estilo de foco para el menú desplegable */
+        #editarForm select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        /* Estilo para las opciones del menú desplegable */
+        #editarForm select option {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        /* Estilo para campos que no se pueden cambiar */
+        #editarForm input[readonly] {
+            background-color: #f8f8f8; /* Color de fondo más claro */
+            cursor: not-allowed; /* Cursor de no permitido */
+        }
+        
+        /* Estilo para el botón deshabilitado */
+        #editarForm button:disabled {
+            background-color: #666; /* Color de fondo más oscuro */
+            cursor: not-allowed; /* Cursor de no permitido */
+        }
+        
+    </style>        
+</head>
+<body>
+    <main>
+        <div id="editarForm">
+            <h2>Editar Referencia</h2>
+            <div>
+                {% if referenica %}
+                <h3>Seleccionar SKU:</h3>
+                <form id="selectForm" method="post">
+                    {% csrf_token %}
+                    <select id="referenciaSelect" name="referenciaSelect" onchange="seleccionarReferencia()">
+                        <option value="" selected disabled>Seleccionar...</option>
+                        {% for referencia in referenica %}
+                        <option value="{{ referencia.SKU }}" data-referencia="{{ referencia.referencia }}" data-color="{{ referencia.color }}" data-talla="{{ referencia.talla }}" data-tipoprenda="{{ referencia.tipoPrenda }}" data-sam="{{ referencia.SAM }}">{{ referencia.SKU }}</option>
+                        {% endfor %}
+                    </select>                    
+                </form>
+                {% endif %}
+            </div>
+            <form action="{% url 'editarReferencia' id=id %}" method="post" id="editarFormulario" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" id="SKU" name="SKU">
+                <div class="input-field">
+                    <label for="referencia">Referencia:</label>
+                    <input type="text" id="referencia" name="referencia" required readonly />
+                </div>
+                <div class="input-field">
+                    <label for="color">Color:</label>
+                    <input type="text" id="color" name="color" required readonly />
+                </div>
+                <div class="input-field">
+                    <label for="talla">Talla:</label>
+                    <input type="text" id="talla" name="talla" required readonly />
+                </div>
+                <div class="input-field">
+                    <label for="tipoPrenda">Tipo de prenda:</label>
+                    <input type="text" id="tipoPrenda" name="tipoPrenda" required readonly />
+                </div>
+                <div class="input-field">
+                    <label for="SAM">SAM:</label>
+                    <input type="number" step="0.01" id="SAM" name="SAM" required />
+                </div>
+                <button type="submit" id="guardarCambiosBtn" >Guardar Cambios</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function seleccionarReferencia() {
+            var referenciaSelect = document.getElementById('referenciaSelect');
+            var referenciaSeleccionada = referenciaSelect.options[referenciaSelect.selectedIndex];
+            var guardarCambiosBtn = document.getElementById('guardarCambiosBtn');
+            
+            if (referenciaSeleccionada.value !== "") {
+                document.getElementById('SKU').value = referenciaSeleccionada.value;
+                document.getElementById('referencia').value = referenciaSeleccionada.getAttribute('data-referencia'); // Corrección aquí
+                document.getElementById('color').value = referenciaSeleccionada.dataset.color;
+                document.getElementById('talla').value = referenciaSeleccionada.dataset.talla;
+                document.getElementById('tipoPrenda').value = referenciaSeleccionada.dataset.tipoprenda;
+                document.getElementById('SAM').value = referenciaSeleccionada.dataset.sam;
+                document.getElementById('editarFormulario').style.display = 'block';
+                guardarCambiosBtn.disabled = false;
+            } else {
+                // Si se selecciona la opción "Seleccionar...", desactivar el botón
+                document.getElementById('editarFormulario').style.display = 'none';
+                guardarCambiosBtn.disabled = true;
+            }
+        }
+        
+        
+    </script>
+</body>
+</html>

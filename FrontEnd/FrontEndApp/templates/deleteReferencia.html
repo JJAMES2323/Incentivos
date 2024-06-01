@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Referencia</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>REFERENCIA</th>
+                <th>COLOR</th>
+                <th>TALlA</th>
+                <th>TIPO PRENDA</th>
+                <th>SAM</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if referenica %}
+                {% for item in referenica %}
+                <form action="{% url 'eliminarReferencia' id=id %}" method="get">
+                    <tr>
+                        <input type="hidden" id="SKU" name="SKU" value="{{ item.SKU }}">
+                        <td>{{ item.SKU }}</td>
+                        <td>{{ item.referencia }}</td>
+                        <td>{{ item.color }}</td>
+                        <td>{{ item.talla }}</td>
+                        <td>{{ item.tipoPrenda }}</td>
+                        <td>{{ item.SAM }}</td>
+                        <td>
+                            <!-- Reemplazo del botón por un icono de trash -->
+                            <button type="submit" style="background: none; border: none;">
+                                <i class="fas fa-trash-alt" style="color: red;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No hay operarios disponibles.</td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button onclick="window.history.back()">Regresar</button>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>

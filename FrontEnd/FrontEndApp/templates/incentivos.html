@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INCENTIVOS</title>
+
+    <link rel="stylesheet" href="{% static 'assets/css/estilos.css' %}" />
+    <script
+      src="https://kit.fontawesome.com/41bcea2ae3.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      #registroForm,
+      #editarForm1 {
+        display: none;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #000000;
+        border-radius: 5px;
+      }
+      #registroForm h2,
+      #editarForm1 h2 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      #registroForm label,
+      #editarForm1 label {
+        display: block;
+        margin: 10px 0;
+      }
+      #registroForm input,
+      #editarForm1 input,
+      #registroForm select,
+      #editarForm1 select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #0c0c0c;
+        border-radius: 5px;
+        margin-top: 5px;
+      }
+      #registroForm button,
+      #editarForm1 button {
+        width: 100%;
+        padding: 10px;
+        background-color: #121213;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <header>
+      <div class="icon__menu">
+        <i class="fas fa-bars" id="btn_open"></i>
+      </div>
+    </header>
+
+    <div class="menu__side" id="menu_side">
+      <div class="name__page">
+        <i class="fa-solid fa-user"></i>
+        <h4>Incentivos</h4>
+      </div>
+
+      <div class="options__menu">
+        <a href="#" class="selected" id="registrarOption">
+          <div class="option">
+            <i class="fa-regular fa-floppy-disk"></i>
+            <h4>Liquidar Incentivos</h4>
+          </div>
+        </a>
+        <a href="#" class="selected" id="editarOption">
+          <div class="option">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <h4>Pagar Incentivos</h4>
+          </div>
+        </a>
+        <a href="{% url 'DIASPAGADOS' id %}" class="selected" id="btn_search">
+          <div class="option">
+            <i class="fas fa-search"></i>
+            <h4>Dias Pagados</h4>
+          </div>
+        </a>
+        <a href="{% url 'cerrarSesion' id %}">
+          <div class="option">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <h4>Salir</h4>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <main>
+      <div id="registroForm">
+        <h2>Liquidar Incentivos</h2>
+        <form action="{% url 'liquidarIncentivos' id=id %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="token" value="{{ token }}" />
+          <div class="input-field">
+            <span>Fecha:</span>
+            <input type="date" id="fecha" name="fecha" required />
+          </div>
+          <div class="input-field">
+            <span>Módulo:</span>
+            <select id="modulo" name="modulo" required>
+              <option value="" selected disabled>Selecciona un módulo</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+            </select>
+          </div>
+          <br />
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+
+      <div id="editarForm1">
+        <h2>Pagar Incentivos</h2>
+        <form action="{% url 'busquedaIncentivos' id=id %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="token" value="{{ token }}" />
+          <div class="input-field">
+            <span>Fecha inicio:</span>
+            <input type="date" id="fecha1" name="fechaInicial" required />
+          </div>
+          <div class="input-field">
+            <span>Fecha final:</span>
+            <input type="date" id="fecha2" name="fechaFinal" required />
+          </div>
+          <br />
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+
+      {% if liquidacion_incentivos %}
+      <script>
+        alert("Modulo liquidado correctamente.");
+      </script>
+      {% endif %} {% if pago_incentivo %}
+      <script>
+        alert("Referencia eliminada correctamente.");
+      </script>
+      {% endif %}
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const registroForm = document.getElementById("registroForm");
+        const editarForm = document.getElementById("editarForm1");
+        const registrarOption = document.getElementById("registrarOption");
+        const editarOption = document.getElementById("editarOption");
+        const side_menu = document.getElementById("menu_side");
+        const btn_open = document.getElementById("btn_open");
+        const body = document.getElementById("body");
+
+        registrarOption.addEventListener("click", function (e) {
+          e.preventDefault();
+          toggleFormulario(registroForm);
+        });
+        editarOption.addEventListener("click", function (e) {
+          e.preventDefault();
+          toggleFormulario(editarForm);
+        });
+
+        btn_open.addEventListener("click", function () {
+          body.classList.toggle("body_move");
+          side_menu.classList.toggle("menu__side_move");
+          cerrarFormulario();
+        });
+
+        if (window.innerWidth < 760) {
+          body.classList.add("body_move");
+          side_menu.classList.add("menu__side_move");
+        }
+
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > 760) {
+            body.classList.remove("body_move");
+            side_menu.classList.remove("menu__side_move");
+          }
+          if (window.innerWidth < 760) {
+            body.classList.add("body_move");
+            side_menu.classList.add("menu__side_move");
+          }
+        });
+
+        // Obtener la fecha actual
+        const now = new Date();
+        const year = now.getFullYear();
+        let month = now.getMonth() + 1;
+        month = month < 10 ? "0" + month : month;
+        let day = now.getDate();
+        day = day < 10 ? "0" + day : day;
+        const fechaActual = `${year}-${month}-${day}`;
+        // Establecer la fecha actual como valor por defecto para el campo de fecha
+        document.getElementById("fecha").value = fechaActual;
+        document.getElementById("fecha1").value = fechaActual;
+        document.getElementById("fecha2").value = fechaActual;
+
+        // Establecer la fecha actual como máximo valor permitido en el campo de fecha
+        document.getElementById("fecha").setAttribute("max", fechaActual);
+        document.getElementById("fecha1").setAttribute("max", fechaActual);
+        document.getElementById("fecha2").setAttribute("max", fechaActual);
+
+        // Obtener los elementos de fecha
+        const fecha1Input = document.getElementById("fecha1");
+        const fecha2Input = document.getElementById("fecha2");
+
+        // Agregar un eventListener para cuando cambie la fecha1
+        fecha1Input.addEventListener("change", function () {
+          // Obtener los valores de ambas fechas
+          const fecha1 = new Date(fecha1Input.value);
+          const fecha2 = new Date(fecha2Input.value);
+
+          // Verificar si fecha1 es mayor que fecha2
+          if (fecha1 > fecha2) {
+            // Si fecha1 es mayor, establecerla igual a fecha2
+            fecha1Input.value = fecha2Input.value;
+          }
+        });
+
+        // Agregar un eventListener para cuando cambie la fecha2
+        fecha2Input.addEventListener("change", function () {
+          // Obtener los valores de ambas fechas
+          const fecha1 = new Date(fecha1Input.value);
+          const fecha2 = new Date(fecha2Input.value);
+
+          // Verificar si fecha1 es mayor que fecha2
+          if (fecha1 > fecha2) {
+            // Si fecha1 es mayor, establecerla igual a fecha2
+            fecha1Input.value = fecha2Input.value;
+          }
+        });
+
+        function toggleFormulario(formulario) {
+          if (formulario.style.display === "block") {
+            formulario.style.display = "none";
+          } else {
+            cerrarFormulario();
+            formulario.style.display = "block";
+          }
+        }
+
+        function cerrarFormulario() {
+          registroForm.style.display = "none";
+          editarForm.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

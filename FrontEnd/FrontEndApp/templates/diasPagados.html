@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dias pagados</title>
+  <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+  <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+  <style>
+    /* Estilos para el cuerpo */
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Estilo para el header */
+    header {
+      width: 100%;
+      height: 60px;
+      background-color: #0f0f0f;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      color: white;
+      margin: 0;
+    }
+
+    /* Estilos para la tabla */
+    table {
+      width: 80%; /* Modificamos para que ocupe el 80% del ancho */
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow-x: hidden;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    /* Estilo para el campo de turno laborado */
+    .turno-laborado-input {
+      width: 60px;
+      text-align: center;
+    }
+
+    /* Estilo para el botón */
+    button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilo para el campo de turno real */
+    #turnoReal {
+      width: 60px;
+      text-align: center;
+      padding: 5px;
+      margin-top: 20px; /* Ajustamos el margen superior */
+    }
+
+    /* Estilos para el contenedor de la tabla y el botón */
+    .table-container {
+      width: 80%;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    /* Estilo para el botón dentro del contenedor */
+    .table-container button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+    <header>
+      <button onclick="window.history.back()">Regresar</button>
+      <h1>Dias De Incentivos Pagados</h1>
+    </header>
+  
+    <div class="table-container">
+      <table id="tablaOperarios">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if fechas_pagadas %}
+            {% for fecha in fechas_pagadas %}
+              <tr>
+                <td>{{ fecha }}</td>
+                <td>Pagados</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="2">No hay incentivos pagados disponibles.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  
+  </body>
+  </html>

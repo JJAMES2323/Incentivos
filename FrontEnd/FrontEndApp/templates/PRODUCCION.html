@@ -1,0 +1,449 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRODUCCION</title>
+  <link rel="stylesheet" href="{% static 'assets/css/estilos.css' %}" />
+  <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+  <style>
+    #registroOpForm {
+      display: none;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border: 1px solid #000000;
+      border-radius: 5px;
+  }
+  
+  #registroOpForm h2 {
+      text-align: center;
+      margin-bottom: 10px;
+  }
+  
+  #registroOpForm label {
+      display: block;
+      margin: 10px 0;
+  }
+  
+  #registroOpForm input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #0c0c0c;
+      border-radius: 5px;
+      margin-top: 5px;
+  }
+  #registroOpForm select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #0c0c0c;
+      border-radius: 5px;
+      margin-top: 5px;
+  }
+  #registroOpForm button {
+    width: 100%;
+    padding: 10px;
+    background-color: #121213;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;}
+  
+  #escaneoForm button {
+      width: 100%;
+      padding: 10px;
+      background-color: #121213;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+  #escaneoForm {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin-top: 50px; /* Ajusta el margen superior para centrar el formulario */
+    box-sizing: border-box; /* Asegura que el padding se tenga en cuenta en el ancho total */
+    overflow: hidden; /* Oculta el desbordamiento para eliminar la línea en blanco a la derecha */
+}
+
+#escaneoForm h2 {
+    text-align: center;
+    margin-bottom: 20px; /* Aumenta el espacio entre el título y los campos */
+}
+
+#escaneoForm .input-field {
+    margin-bottom: 15px; /* Espacio entre los campos */
+    text-align: center; /* Centra los inputs */
+}
+
+#escaneoForm span {
+    display: inline-block;
+    width: 120px; /* Ancho fijo para las etiquetas */
+    font-weight: bold;
+}
+
+#escaneoForm input {
+    width: calc(100% - 120px); /* Calcula el ancho del input restando el ancho de la etiqueta */
+    padding: 10px;
+    border: 1px solid #0c0c0c;
+    border-radius: 5px;
+}
+
+#escaneoForm button {
+    width: 100%;
+    padding: 10px;
+    background-color: #121213;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Ajusta el espacio entre el último campo y el botón */
+}
+#escaneoForm select {
+    width: calc(100% - 120px); /* Ancho del input */
+    padding: 10px;
+    border: 1px solid #0c0c0c;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 16px; /* Tamaño de fuente */
+    color: #333; /* Color de texto */
+    background-color: #fff; /* Color de fondo */
+}
+
+/* Estilo para la flecha del menú desplegable */
+#escaneoForm select::after {
+    content: "\25BC"; /* Flecha hacia abajo */
+    position: absolute;
+    top: calc(50% - 8px); /* Centra verticalmente */
+    right: 10px;
+    pointer-events: none; /* Evita la selección de la flecha */
+}
+
+/* Estilo de foco para el menú desplegable */
+#escaneoForm select:focus {
+    outline: none; /* Elimina el contorno al enfocar */
+    border-color: #007bff; /* Color del borde al enfocar */
+}
+
+/* Estilo para las opciones del menú desplegable */
+#escaneoForm select option {
+    font-size: 16px; /* Tamaño de fuente */
+    color: #333; /* Color de texto */
+}
+    
+    
+  </style>
+</head>
+<body id="body">
+<header>
+  <div class="icon__menu">
+    <i class="fas fa-bars" id="btn_open"></i>
+  </div>
+</header>
+<div class="menu__side" id="menu_side">
+  <div class="name__page">
+    <i class="fa-solid fa-user"></i>
+    <h4>Produccion</h4>
+  </div>
+  <div class="options__menu">
+    <a href="#" class="selected" id="registrarOption">
+      <div class="option">
+        <i class="fa-regular fa-floppy-disk"></i>
+        <h4>Crear Referencia</h4>
+      </div>
+    </a>
+    <a href="#" class="selected" id="editarOption">
+      <div class="option">
+        <i class="fas fa-pencil-alt"></i>
+        <h4>Editar Referencia</h4>
+      </div>
+    </a>
+    <a href="{% url 'buscarTodosReferencias' id=id %}">
+      <div class="option">
+        <i class="fas fa-trash-alt"></i>
+        <h4>Eliminar Referencia</h4>
+      </div>
+    </a>
+    <a href="#" class="selected" id="registrarOpOption">
+      <div class="option">
+        <i class="fa-regular fa-floppy-disk"></i>
+        <h4>Crear Orden de Producción</h4>
+      </div>
+    </a>
+    <a href="#" class="selected" id="editarOpOption">
+      <div class="option">
+        <i class="fas fa-pencil-alt"></i>
+        <h4>Editar Orden De Produccion</h4>
+      </div>
+    </a>
+    <a href="{% url 'buscarTodosOrden' id=id %}">
+      <div class="option">
+        <i class="fas fa-trash-alt"></i>
+        <h4>Eliminar Orden</h4>
+      </div>
+    </a>
+    <a href="#" class="selected" id="escanearOption">
+      <div class="option">
+        <i class="fas fa-barcode icono-escaneo"></i>
+        <h4>Escanear</h4>
+      </div>
+    </a>
+    <a href="{% url 'cerrarSesion' id %}">
+      <div class="option">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <h4>Salir</h4>
+      </div>
+    </a>
+  </div>
+</div>
+
+<main>
+  <div id="registroForm" style="display: none">
+    <h2>Crear Referencia</h2>
+    <form action="{% url 'registraReferencia' id=id %}" method="get">
+      <div class="input-field">
+        <span>Referencia:</span>
+        <input type="text" id="referenciaC" name="referenciaC" required />
+        <div class="input-field">
+          <span>Color:</span>
+          <select id="color" name="color" required>
+            <option value="" selected disabled>Selecciona un color</option>
+            <option value="Negro">Negro</option>
+            <option value="Blanco">Blanco</option>
+            <option value="Rojo">Rojo</option>
+            <option value="Azul">Azul</option>
+            <option value="Amarillo">Amarillo</option>
+            <option value="Verde">Verde</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <span>Talla:</span>
+          <select id="talla" name="talla" required>
+            <option value="" selected disabled>Selecciona una talla</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            <option value="XXXL">XXXL</option>
+            <option value="Unica">Unica</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <span>Tipo de prenda:</span>
+          <input type="text" id="tipoPrenda" name="tipoPrenda" required />
+        </div>
+        <div class="input-field">
+          <span>SAM:</span>
+          <input type="number" step="0.01" id="SAM" name="SAM" required />
+        </div>
+        <br />
+        <button type="submit">Registrar</button>
+      </div>
+    </form>
+  </div>
+  <div id="registroOpForm" style="display: none">
+    <h2>Crear Orden de Producción</h2>
+    <form action="{% url 'registraOrden' id=id %}" method="get">
+      <span>Referencia:</span>
+        <input type="text" id="referencia" name="referencia" required />
+        <div class="input-field">
+          <span>Color:</span>
+          <select id="color" name="color" required>
+            <option value="" selected disabled>Selecciona un color</option>
+            <option value="Negro">Negro</option>
+            <option value="Blanco">Blanco</option>
+            <option value="Rojo">Rojo</option>
+            <option value="Azul">Azul</option>
+            <option value="Amarillo">Amarillo</option>
+            <option value="Verde">Verde</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <span>Talla:</span>
+          <select id="talla" name="talla" required>
+            <option value="" selected disabled>Selecciona una talla</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            <option value="XXXL">XXXL</option>
+            <option value="Unica">Unica</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <span>Modulo:</span>
+          <input type="text" id="modulo" name="modulo" required />
+        </div>
+        <div class="input-field">
+          <span>Unidades:</span>
+          <input type="number" id="cantidad" name="cantidad" required />
+        </div>
+      <br />
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
+</main>
+<div id="editarForm" style="display: none">
+  <h2>Editar Referencia</h2>
+  <form action="{% url 'buscarReferencias' id=id %}" method="get">
+    <div class="input-field">
+      <span>Referencia:</span>
+      <input type="text" id="referenciaEditar" name="referenciaEditar" required />
+    </div>
+    <button type="submit">Buscar</button>
+  </form>
+</div>
+<div id="editarOpForm" style="display: none">
+  <h2>Editar Orden De Produccion</h2>
+  <form action="{% url 'buscarOrden' id=id %}" method="get">
+    <div class="input-field">
+      <span>Orden De Produccion:</span>
+      <input type="text" id="ordenEditar" name="ordenEditar" required />
+    </div>
+    <button type="submit">Buscar</button>
+  </form>
+</div>
+<div id="escaneoForm" style="display: none;">
+  <h2>Escaneo</h2>
+  <form action="{% url 'validarOrden' id=id %}" method="get">
+    <div class="input-field">
+      <span>Orden:</span>
+      <input type="text" id="ordenValidar" name="ordenValidar" required />
+    </div>
+    <div class="input-field">
+      <span>Módulo:</span>
+      <select id="moduloValidar" name="moduloValidar" required>
+        <option value="" selected disabled>Selecciona un módulo</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+      </select>
+    </div>
+    <br>
+    <button type="submit">Comprobar</button>
+  </form>
+</div>
+
+
+{% if registro_exitoso %}
+<script>
+  alert("Referencia registrada correctamente.");
+</script>
+{% endif %}
+{% if edicion_exitosa %}
+<script>
+  alert("Referencia editada correctamente.");
+</script>
+{% endif %}   
+{% if eliminacion_exitoso %}
+<script>
+  alert("Referencia eliminada correctamente.");
+</script>
+{% endif %}   
+{% if registro_exitoso_op %}
+<script>
+  alert("Orden registrada correctamente.");
+</script>
+{% endif %}
+{% if edicion_exitosa_Op %}
+<script>
+  alert("Orden editada correctamente.");
+</script>
+{% endif %}   
+{% if eliminacion_exitoso_Op %}
+<script>
+  alert("Orden eliminada correctamente.");
+</script>
+{% endif %}   
+{% if registro_exitoso_inventario %}
+<script>
+  alert("Escaneo guardado.");
+</script>
+{% endif %}   
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const registroForm = document.getElementById("registroForm");
+    const editarForm = document.getElementById("editarForm");
+    const registroOpForm = document.getElementById("registroOpForm");
+    const editarOpForm = document.getElementById("editarOpForm");
+    const escaneoForm = document.getElementById("escaneoForm"); // Agregamos referencia al formulario de escaneo
+    const registrarOption = document.getElementById("registrarOption");
+    const editarOption = document.getElementById("editarOption");
+    const registrarOpOption = document.getElementById("registrarOpOption");
+    const editarOpOption = document.getElementById("editarOpOption");
+    const escanearOption = document.getElementById("escanearOption"); // Agregamos referencia al enlace de escaneo
+    const side_menu = document.getElementById("menu_side");
+    const btn_open = document.getElementById("btn_open");
+    const body = document.getElementById("body");
+  
+    registrarOption.addEventListener("click", function (e) {
+      e.preventDefault();
+      toggleFormulario(registroForm);
+    });
+    editarOption.addEventListener("click", function (e) {
+      e.preventDefault();
+      toggleFormulario(editarForm);
+    });
+    registrarOpOption.addEventListener("click", function (e) {
+      e.preventDefault();
+      toggleFormulario(registroOpForm);
+    });
+    editarOpOption.addEventListener("click", function (e) {
+      e.preventDefault();
+      toggleFormulario(editarOpForm);
+    });
+    escanearOption.addEventListener("click", function (e) { // Agregamos evento para abrir el formulario de escaneo
+      e.preventDefault();
+      toggleFormulario(escaneoForm);
+    });
+    btn_open.addEventListener("click", function () {
+      body.classList.toggle("body_move");
+      side_menu.classList.toggle("menu__side_move");
+      cerrarFormulario();
+    });
+    if (window.innerWidth < 760) {
+      body.classList.add("body_move");
+      side_menu.classList.add("menu__side_move");
+    }
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 760) {
+        body.classList.remove("body_move");
+        side_menu.classList.remove("menu__side_move");
+      }
+      if (window.innerWidth < 760) {
+        body.classList.add("body_move");
+        side_menu.classList.add("menu__side_move");
+      }
+    });
+    function toggleFormulario(formulario) {
+      if (formulario.style.display === "block") {
+        formulario.style.display = "none";
+      } else {
+        cerrarFormulario();
+        formulario.style.display = "block";
+      }
+    }
+    function cerrarFormulario() {
+      registroForm.style.display = "none";
+      editarForm.style.display = "none";
+      registroOpForm.style.display = "none";
+      editarOpForm.style.display = "none";
+      escaneoForm.style.display = "none"; // Aseguramos que el formulario de escaneo se cierre
+    }
+  });
+
+</script>
+
+</body>
+</html>

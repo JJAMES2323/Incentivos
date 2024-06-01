@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Operarios</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <style>
+        #editarForm {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            margin-top: 50px; /* Ajusta el margen superior para centrar el formulario */
+            box-sizing: border-box; /* Asegura que el padding se tenga en cuenta en el ancho total */
+            overflow: hidden; /* Oculta el desbordamiento para eliminar la línea en blanco a la derecha */
+        }
+        
+        #editarForm h2 {
+            text-align: center;
+            margin-bottom: 20px; /* Aumenta el espacio entre el título y los campos */
+        }
+        
+        #editarForm .input-field {
+            margin-bottom: 15px; /* Espacio entre los campos */
+            text-align: center; /* Centra los inputs */
+        }
+        
+        #editarForm span {
+            display: inline-block;
+            width: 120px; /* Ancho fijo para las etiquetas */
+            font-weight: bold;
+        }
+        
+        #editarForm input {
+            width: calc(100% - 120px); /* Calcula el ancho del input restando el ancho de la etiqueta */
+            padding: 10px;
+            border: 1px solid #0c0c0c;
+            border-radius: 5px;
+        }
+        
+        #editarForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #121213;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px; /* Ajusta el espacio entre el último campo y el botón */
+        }
+        
+    </style>
+    <!-- Tus estilos adicionales aquí -->
+</head>
+<body>
+    <main>
+        <div id="editarForm">
+            <h2>Editar Operario</h2>
+            <form action="{% url 'editarOperario' id=id %}" method="post">
+                {% csrf_token %}
+                {% if operario %}
+                <input type="hidden" id="cedula" name="cedula" value="{{ operario.0.cedula }}">
+                    <div class="input-field">
+                        <span>Nombre:</span>
+                        <input type="text" id="nombre" name="nombre" value="{{ operario.0.nombre }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Dirección:</span>
+                        <input type="text" id="direccion" name="direccion" value="{{ operario.0.direccion }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Teléfono:</span>
+                        <input type="text" id="telefono" name="telefono" value="{{ operario.0.telefono }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Fecha de Nacimiento:</span>
+                        <input type="date" id="fechaN" name="fechaN" value="{{ operario.0.fechaN }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Correo Electrónico:</span>
+                        <input type="email" id="correoE" name="correoE" value="{{ operario.0.correoE }}" required />
+                    </div>
+                    <div class="input-field">
+                        <span>Modulo:</span>
+                        <select id="modulo" name="modulo" required>
+                            <option value="RH" {% if persona.0.modulo == "A" %} selected {% endif %}>A</option>
+                            <option value="ADMIN" {% if persona.0.modulo == "B" %} selected {% endif %}>B</option>
+                        </select>
+                    </div>
+                    <!-- Agrega más campos según sea necesario -->
+                    <button type="submit">Guardar Cambios</button>
+                    {% else %}
+                    <script>
+                        alert("No se encontró ningún operario para editar.");
+                        window.history.back(); // Regresar a la página anterior
+                    </script>
+                    {% endif %}
+            </form>
+        </div>
+    </main>
+
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    <!-- Tu script JS para manejar la solicitud de edición aquí -->
+</body>
+</html>

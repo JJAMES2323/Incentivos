@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Operario</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if operario %}
+                {% for item in operario %}
+                <form action="{% url 'eliminarOperario' id=id %}" method="get">
+                    <tr>
+                        <input type="hidden" id="cedula" name="cedula" value="{{ item.cedula }}">
+                        <td>{{ item.cedula }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>
+                            <!-- Reemplazo del botón por un icono de trash -->
+                            <button type="submit" style="background: none; border: none;">
+                                <i class="fas fa-trash-alt" style="color: red;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No hay operarios disponibles.</td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button onclick="window.history.back()">Regresar</button>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>

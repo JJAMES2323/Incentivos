@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error</title>
+  <link rel="stylesheet" href="{% static 'assets/css/estilos.css' %}">
+  <style>
+    /* Estilos adicionales para la página de error */
+    .error-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border: 1px solid #000000;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .error-container h2 {
+      margin-bottom: 10px;
+    }
+
+    .error-container p {
+      margin-bottom: 20px;
+    }
+
+    .error-container button {
+      padding: 10px 20px;
+      background-color: #121213;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <h2>Error</h2>
+    <p>{{ mensaje }}</p>
+    <button onclick="window.history.back()">Regresar</button>
+  </div>
+</body>
+</html>

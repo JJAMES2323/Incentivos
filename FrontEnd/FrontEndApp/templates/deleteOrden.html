@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Orden</title>
+    <link rel="stylesheet" href="{% static "assets/css/estilos.css" %}">
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Orden</th>
+                <th>Referencia</th>
+                <th>Color</th>
+                <th>Talla</th>
+                <th>Modulo</th>
+                <th>SKU</th>
+                <th>Unidades</th>
+                <th>Unidades Leidas</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if orden %}
+                {% for item in orden %}
+                <form action="{% url 'eliminarOrden' id=id %}" method="get">
+                    <tr>
+                        <input type="hidden" id="orden" name="orden" value="{{ item.orden }}">
+                        <td>{{ item.orden }}</td>
+                        <td>{{ item.Referencia }}</td>
+                        <td>{{ item.color }}</td>
+                        <td>{{ item.talla }}</td>
+                        <td>{{ item.modulo }}</td>
+                        <td>{{ item.SKU }}</td>
+                        <td>{{ item.unidades }}</td>
+                        <td>{{ item.unidadesLeidas }}</td>
+                        <td>
+                            <!-- Reemplazo del botón por un icono de trash -->
+                            {% if item.unidadesLeidas > 0 %}
+                                <button type="button" disabled style="background: none; border: none; cursor: not-allowed;">
+                                    <i class="fas fa-trash-alt" style="color: gray;"></i>
+                                </button>
+                            {% else %}
+                                <button type="submit" style="background: none; border: none;">
+                                    <i class="fas fa-trash-alt" style="color: red;"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="9">No hay operarios disponibles.</td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <button onclick="window.history.back()">Regresar</button>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>
